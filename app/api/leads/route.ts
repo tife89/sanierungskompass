@@ -20,10 +20,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Gebäudedaten unvollständig.' }, { status: 400 })
     }
 
+    // Eigene IDs generieren, damit wir kein SELECT nach INSERT brauchen
+    // (RLS erlaubt nur INSERT, kein SELECT für anonyme Nutzer)
+    const buildingId = crypto.randomUUID()
+    const leadId = crypto.randomUUID()
+
     // 1. Gebäude speichern
-    const { data: building, error: buildingError } = await supabase
+    const { error: buildingError } = await supabase
       .from('buildings')
       .insert({
+        id:              buildingId,
         address_street:  body.address_street,
         address_plz:     body.address_plz,
         address_city:    body.address_city,
@@ -46,16 +52,15 @@ export async function POST(req: NextRequest) {
           has_pv:               body.has_pv,
         },
       })
-      .select('id')
-      .single()
 
     if (buildingError) throw buildingError
 
     // 2. Lead speichern
-    const { data: lead, error: leadError } = await supabase
+    const { error: leadError } = await supabase
       .from('leads')
       .insert({
-        building_id:       building.id,
+        id:                leadId,
+        building_id:       buildingId,
         status:            'submitted',
         contact_name:      body.contact_name,
         contact_email:     body.contact_email,
@@ -64,22 +69,20 @@ export async function POST(req: NextRequest) {
         preferred_contact: body.preferred_contact ?? 'email',
         marketing_consent: body.marketing_consent ?? false,
       })
-      .select('id')
-      .single()
 
     if (leadError) throw leadError
 
     // 3. Consent-Eintrag (DSGVO-Audit-Log)
     await supabase.from('consents').insert([
       {
-        lead_id:        lead.id,
+        lead_id:        leadId,
         consent_type:   'platform',
         granted:        true,
         policy_version: '1.0',
       },
       ...(body.marketing_consent
         ? [{
-            lead_id:        lead.id,
+            lead_id:        leadId,
             consent_type:   'enercity_marketing',
             granted:        true,
             policy_version: '1.0',
@@ -87,7 +90,7 @@ export async function POST(req: NextRequest) {
         : []),
     ])
 
-    return NextResponse.json({ success: true, lead_id: lead.id }, { status: 201 })
+    return NextResponse.json({ success: true, lead_id: leadId }, { status: 201 })
 
   } catch (error) {
     console.error('Lead creation error:', error)

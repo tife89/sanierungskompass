@@ -73,6 +73,8 @@ export default function Step5Goals({ data, onChange }: Props) {
             </label>
             <input
               type="text"
+              name="name"
+              autoComplete="name"
               placeholder="Vorname Nachname"
               value={data.contact_name ?? ''}
               onChange={(e) => onChange({ contact_name: e.target.value })}
@@ -85,6 +87,8 @@ export default function Step5Goals({ data, onChange }: Props) {
             </label>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
               placeholder="ihre@email.de"
               value={data.contact_email ?? ''}
               onChange={(e) => onChange({ contact_email: e.target.value })}
@@ -96,6 +100,8 @@ export default function Step5Goals({ data, onChange }: Props) {
               <label className="block text-sm font-semibold text-gray-700 mb-1">Straße & Hausnummer</label>
               <input
                 type="text"
+                name="street-address"
+                autoComplete="street-address"
                 placeholder="Musterstr. 12"
                 value={data.address_street ?? ''}
                 onChange={(e) => onChange({ address_street: e.target.value })}
@@ -106,6 +112,8 @@ export default function Step5Goals({ data, onChange }: Props) {
               <label className="block text-sm font-semibold text-gray-700 mb-1">PLZ</label>
               <input
                 type="text"
+                name="postal-code"
+                autoComplete="postal-code"
                 placeholder="30159"
                 maxLength={5}
                 value={data.address_plz ?? ''}
@@ -118,6 +126,8 @@ export default function Step5Goals({ data, onChange }: Props) {
             <label className="block text-sm font-semibold text-gray-700 mb-1">Stadt</label>
             <input
               type="text"
+              name="address-level2"
+              autoComplete="address-level2"
               placeholder="Hannover"
               value={data.address_city ?? ''}
               onChange={(e) => onChange({ address_city: e.target.value })}
