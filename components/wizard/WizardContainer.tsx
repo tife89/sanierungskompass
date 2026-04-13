@@ -68,7 +68,10 @@ export default function WizardContainer() {
         body: JSON.stringify(data),
       })
       if (!res.ok) throw new Error('Fehler beim Speichern.')
-      router.push('/wizard/bestaetigung')
+      // Wizard-Daten für Förderempfehlungen in sessionStorage speichern
+      sessionStorage.setItem('sanierungskompass_wizard_data', JSON.stringify(data))
+      // Zur Ergebnis-Seite mit Förderempfehlungen weiterleiten
+      router.push('/wizard/ergebnis')
     } catch (err) {
       setError('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.')
     } finally {
