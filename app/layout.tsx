@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Sanierungskompass – Ihr Energieberater findet Sie",
@@ -17,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className="h-full">
-      <body className={`${inter.className} min-h-full flex flex-col bg-gray-50`}>
+      <body className="min-h-full flex flex-col bg-gray-50" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
         <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
           <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
             <span className="text-xl font-bold text-green-700">🏠 Sanierungskompass</span>
