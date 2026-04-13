@@ -15,13 +15,16 @@ const GOALS = [
   { value: 'climate',        label: '🌱 CO₂-Fußabdruck reduzieren' },
 ]
 
+type GoalValue = 'cost_reduction' | 'subsidies' | 'comfort' | 'value' | 'climate'
+
 export default function Step5Goals({ data, onChange }: Props) {
-  const goals = data.goals ?? []
+  const goals: GoalValue[] = data.goals ?? []
 
   const toggleGoal = (value: string) => {
-    const updated = goals.includes(value as WizardData['goals'][0])
-      ? goals.filter((g) => g !== value)
-      : [...goals, value as WizardData['goals'][0]]
+    const v = value as GoalValue
+    const updated = goals.includes(v)
+      ? goals.filter((g) => g !== v)
+      : [...goals, v]
     onChange({ goals: updated })
   }
 
@@ -44,15 +47,15 @@ export default function Step5Goals({ data, onChange }: Props) {
               type="button"
               onClick={() => toggleGoal(goal.value)}
               className={`w-full text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all flex items-center gap-3 ${
-                goals.includes(goal.value as WizardData['goals'][0])
+                goals.includes(goal.value as GoalValue)
                   ? 'border-green-700 bg-green-50 text-green-800'
                   : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
               }`}
             >
               <span className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
-                goals.includes(goal.value as WizardData['goals'][0]) ? 'bg-green-700 border-green-700 text-white' : 'border-gray-300'
+                goals.includes(goal.value as GoalValue) ? 'bg-green-700 border-green-700 text-white' : 'border-gray-300'
               }`}>
-                {goals.includes(goal.value as WizardData['goals'][0]) && '✓'}
+                {goals.includes(goal.value as GoalValue) && '✓'}
               </span>
               {goal.label}
             </button>
